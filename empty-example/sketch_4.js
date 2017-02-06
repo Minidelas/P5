@@ -1,7 +1,7 @@
-const distx = 25;
-const disty = 25;
-const width = 400;
-const height = 400;
+const distx = 5;
+const disty = 5;
+const width = 800;
+const height = 800;
 var rows = Math.round(height/disty);
 var columns = Math.round(width/distx);
 
@@ -15,8 +15,8 @@ class Grid {
     this.columnas = columns;
     this.filas = rows;
     this.cuadricula = new Array();
-    this.posxAct = 0;
-    this.posyAct = 0;
+    this.posxAct = Math.floor(random(this.filas));
+    this.posyAct = Math.floor(random(this.columnas));
     for (var i = 0; i < this.columnas; i++) {
       this.cuadricula[i] = new Array();
       for (var j = 0; j < this.filas; j++) {
@@ -44,12 +44,46 @@ class Grid {
     return true;
   }
 
+}
+
+class Runner {
+  constructor (grid, color) {
+    this.grid = grid;
+    this.color = color;
+    this.posxAct = Math.floor(random(rows));
+    this.posyAct = Math.floor(random(columns));
+  }
+
+  mazeIt() {
+    var moves = ['u', 'd', 'r', 'l'];
+    if(!this.grid.everyOneTouched()) {
+      if (this.availMove()) {
+        this.move(moves[Math.floor(random(4))], this.grid);
+      } else {
+        // this.grid.cuadricula[this.posxAct][this.posyAct].drawCustom(this.color);
+        try {
+          var lm = this.grid.cuadricula[this.posxAct][this.posyAct].lastMove();
+          this.posxAct = lm.x;
+          this.posyAct = lm.y;
+        } catch (e) {}
+        // this.grid.cuadricula[this.posxAct][this.posyAct].drawCurrent();
+      }
+    } else {
+      // this.grid.cuadricula[this.posxAct][this.posyAct].drawCustom(this.color);
+      // this.grid.cuadricula[0][0].join('l');
+      // this.grid.cuadricula[0][0].drawCustom('#F93F3F');
+      // this.grid.cuadricula[this.grid.cuadricula.length-1][this.grid.cuadricula[this.grid.cuadricula.length-1].length-1].join('r');
+      // this.grid.cuadricula[this.grid.cuadricula.length-1][this.grid.cuadricula[this.grid.cuadricula.length-1].length-1].drawCustom('#8ADF39');
+      noLoop();
+    }
+  }
+
   availMove() {
     var result = false;
     try {
-      if (g.posyAct >= 0
-        && g.cuadricula[g.posxAct][g.posyAct - 1]
-        && !g.cuadricula[g.posxAct][g.posyAct - 1].isTouched()) {
+      if (this.posyAct >= 0
+        && this.grid.cuadricula[this.posxAct][this.posyAct - 1]
+        && !this.grid.cuadricula[this.posxAct][this.posyAct - 1].isTouched()) {
           result = true;
       }
     } catch (e) {
@@ -57,9 +91,9 @@ class Grid {
     }
 
     try {
-      if (g.posyAct <= rows - 1
-        && g.cuadricula[g.posxAct][g.posyAct + 1]
-        && !g.cuadricula[g.posxAct][g.posyAct + 1].isTouched()) {
+      if (this.posyAct <= rows - 1
+        && this.grid.cuadricula[this.posxAct][this.posyAct + 1]
+        && !this.grid.cuadricula[this.posxAct][this.posyAct + 1].isTouched()) {
           result = true;
       }
     } catch (e) {
@@ -67,9 +101,9 @@ class Grid {
     }
 
     try {
-      if (g.posxAct >= 0
-        && g.cuadricula[g.posxAct - 1][g.posyAct]
-        && !g.cuadricula[g.posxAct - 1][g.posyAct].isTouched()) {
+      if (this.posxAct >= 0
+        && this.grid.cuadricula[this.posxAct - 1][this.posyAct]
+        && !this.grid.cuadricula[this.posxAct - 1][this.posyAct].isTouched()) {
           result = true;
       }
     } catch (e) {
@@ -77,9 +111,9 @@ class Grid {
     }
 
     try {
-      if (g.posxAct <= columns - 1
-        && g.cuadricula[g.posxAct + 1][g.posyAct]
-        && !g.cuadricula[g.posxAct + 1][g.posyAct].isTouched()) {
+      if (this.posxAct <= columns - 1
+        && this.grid.cuadricula[this.posxAct + 1][this.posyAct]
+        && !this.grid.cuadricula[this.posxAct + 1][this.posyAct].isTouched()) {
           result = true;
       }
     } catch (e) {
@@ -88,26 +122,83 @@ class Grid {
     return result;
   }
 
-  mazeIt() {
-    var moves = ['u', 'd', 'r', 'l'];
-    if(!this.everyOneTouched()) {
-      if (this.availMove()) {
-        move(moves[Math.floor(random(4))], this);
-      } else {
-        this.cuadricula[this.posxAct][this.posyAct].drawBack();
-        var lm = this.cuadricula[this.posxAct][this.posyAct].lastMove();
-        this.posxAct = lm.x;
-        this.posyAct = lm.y;
-        this.cuadricula[this.posxAct][this.posyAct].drawCurrent();
+  move(dir) {
+    var validMove = false;
+    var move = {
+      x: this.posxAct,
+      y: this.posyAct
+    };
+    switch (dir) {
+      case 'u':
+      try {
+        if (this.posyAct > 0
+          && this.grid.cuadricula[this.posxAct][this.posyAct - 1]
+          && !this.grid.cuadricula[this.posxAct][this.posyAct - 1].isTouched()) {
+            this.grid.cuadricula[this.posxAct][this.posyAct].touch();
+            this.grid.cuadricula[this.posxAct][this.posyAct].join(dir, this.color);
+            this.posyAct--;
+            this.grid.cuadricula[this.posxAct][this.posyAct].join('d', this.color);
+            validMove = true;
+          }
+      } catch (e) {
       }
-    } else {
-      this.cuadricula[this.posxAct][this.posyAct].drawBack();
-      this.cuadricula[0][0].join('l');
-      this.cuadricula[this.cuadricula.length-1][this.cuadricula[this.cuadricula.length-1].length-1].join('r');
-      noLoop();
-    }
-  }
+      break;
 
+      case 'd':
+      try {
+        if (this.posyAct < rows - 1
+          && this.grid.cuadricula[this.posxAct][this.posyAct + 1]
+          && !this.grid.cuadricula[this.posxAct][this.posyAct + 1].isTouched()) {
+            this.grid.cuadricula[this.posxAct][this.posyAct].touch();
+            this.grid.cuadricula[this.posxAct][this.posyAct].join(dir, this.color);
+            this.posyAct++;
+            this.grid.cuadricula[this.posxAct][this.posyAct].join('u', this.color);
+            validMove = true;
+        }
+      } catch (e) {
+      }
+      break;
+
+      case 'l':
+      try {
+        if (this.posxAct > 0
+          && this.grid.cuadricula[this.posxAct - 1][this.posyAct]
+          && !this.grid.cuadricula[this.posxAct - 1][this.posyAct].isTouched()) {
+            this.grid.cuadricula[this.posxAct][this.posyAct].touch();
+            this.grid.cuadricula[this.posxAct][this.posyAct].join(dir, this.color);
+            this.posxAct--;
+            this.grid.cuadricula[this.posxAct][this.posyAct].join('r', this.color);
+            validMove = true;
+          }
+      } catch (e) {
+      }
+      break;
+
+      case 'r':
+      try {
+        if (this.posxAct < columns - 1
+          && this.grid.cuadricula[this.posxAct + 1][this.posyAct]
+          && !this.grid.cuadricula[this.posxAct + 1][this.posyAct].isTouched()) {
+            this.grid.cuadricula[this.posxAct][this.posyAct].touch();
+            this.grid.cuadricula[this.posxAct][this.posyAct].join(dir, this.color);
+            this.posxAct++;
+            this.grid.cuadricula[this.posxAct][this.posyAct].join('l', this.color);
+            validMove = true;
+          }
+      } catch (e) {
+      }
+      break;
+
+    }
+
+    if (validMove) {
+      this.grid.cuadricula[this.posxAct][this.posyAct].drawCustom(this.color);
+      this.grid.cuadricula[this.posxAct][this.posyAct].touch();
+      this.grid.cuadricula[this.posxAct][this.posyAct].setLastMove(move.x, move.y);
+    }
+
+    return validMove;
+  }
 }
 
 class Cuadrado {
@@ -156,26 +247,26 @@ class Cuadrado {
     line(this.x,            this.y+this.disty, this.x,            this.y);            // IZQUIERDA
   }
 
-  join(direction) {
-    stroke(color('#75A0C7'));
-    fill(color('#75A0C7'));
+  join(direction, colorAux) {
+    stroke(color(colorAux));
+    fill(color(colorAux));
     switch (direction) {
       case 'u':
-        line(this.x,            this.y,            this.x+this.distx, this.y);
+        line(this.x+1,            this.y,              this.x+this.distx-1, this.y              );
       break;
       case 'd':
-        line(this.x+this.distx, this.y+this.disty, this.x,            this.y+this.disty);
+        line(this.x+this.distx-1, this.y+this.disty,   this.x+1,            this.y+this.disty   );
       break;
       case 'l':
-        line(this.x,            this.y+this.disty, this.x,            this.y);
+        line(this.x,              this.y+this.disty-1, this.x,              this.y+1            );
       break;
       case 'r':
-        line(this.x+this.distx, this.y,            this.x+this.distx, this.y+this.disty);
+        line(this.x+this.distx,   this.y+1,            this.x+this.distx,   this.y+this.disty-1 );
       break;
     }
     if (this.touched) {
       noStroke();
-      fill(color('#75A0C7'));
+      fill(color(colorAux));
       rect(
         this.x + 1,
         this.y + 1,
@@ -206,84 +297,17 @@ class Cuadrado {
       this.disty - 1
     );
   }
-}
 
-function move(dir, g) {
-  var validMove = false;
-  var move = {
-    x: g.posxAct,
-    y: g.posyAct
-  };
-  switch (dir) {
-    case 'u':
-    try {
-      if (g.posyAct > 0
-        && g.cuadricula[g.posxAct][g.posyAct - 1]
-        && !g.cuadricula[g.posxAct][g.posyAct - 1].isTouched()) {
-          g.cuadricula[g.posxAct][g.posyAct].touch();
-          g.cuadricula[g.posxAct][g.posyAct].join(dir);
-          g.posyAct--;
-          g.cuadricula[g.posxAct][g.posyAct].join('d');
-          validMove = true;
-        }
-    } catch (e) {
-    }
-    break;
-
-    case 'd':
-    try {
-      if (g.posyAct < rows - 1
-        && g.cuadricula[g.posxAct][g.posyAct + 1]
-        && !g.cuadricula[g.posxAct][g.posyAct + 1].isTouched()) {
-          g.cuadricula[g.posxAct][g.posyAct].touch();
-          g.cuadricula[g.posxAct][g.posyAct].join(dir);
-          g.posyAct++;
-          g.cuadricula[g.posxAct][g.posyAct].join('u');
-          validMove = true;
-      }
-    } catch (e) {
-    }
-    break;
-
-    case 'l':
-    try {
-      if (g.posxAct > 0
-        && g.cuadricula[g.posxAct - 1][g.posyAct]
-        && !g.cuadricula[g.posxAct - 1][g.posyAct].isTouched()) {
-          g.cuadricula[g.posxAct][g.posyAct].touch();
-          g.cuadricula[g.posxAct][g.posyAct].join(dir);
-          g.posxAct--;
-          g.cuadricula[g.posxAct][g.posyAct].join('r');
-          validMove = true;
-        }
-    } catch (e) {
-    }
-    break;
-
-    case 'r':
-    try {
-      if (g.posxAct < columns - 1
-        && g.cuadricula[g.posxAct + 1][g.posyAct]
-        && !g.cuadricula[g.posxAct + 1][g.posyAct].isTouched()) {
-          g.cuadricula[g.posxAct][g.posyAct].touch();
-          g.cuadricula[g.posxAct][g.posyAct].join(dir);
-          g.posxAct++;
-          g.cuadricula[g.posxAct][g.posyAct].join('l');
-          validMove = true;
-        }
-    } catch (e) {
-    }
-    break;
-
+  drawCustom(hex) {
+    noStroke();
+    fill(color(hex));
+    rect(
+      this.x + 1,
+      this.y + 1,
+      this.distx - 1,
+      this.disty - 1
+    );
   }
-
-  if (validMove) {
-    g.cuadricula[g.posxAct][g.posyAct].drawCurrent();
-    g.cuadricula[g.posxAct][g.posyAct].touch();
-    g.cuadricula[g.posxAct][g.posyAct].setLastMove(move.x, move.y);
-  }
-
-  return validMove;
 }
 
 function setup() {
@@ -291,8 +315,18 @@ function setup() {
   background(255);
   g = new Grid(width, height, distx, disty);
   g.dibujar();
+
+  r1 = new Runner(g, '#F93F3F');
+  r2 = new Runner(g, '#8ADF39');
+  r3 = new Runner(g, 'blue');
+  r4 = new Runner(g, 'black');
 }
 
 function draw() {
-  g.mazeIt();
+  for (var i = 0; i < 50; i++) {
+    r1.mazeIt();
+    r2.mazeIt();
+    r3.mazeIt();
+    r4.mazeIt();
+  }
 }
