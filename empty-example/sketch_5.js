@@ -24,6 +24,11 @@ function draw() {
   }
 }
 
-// function mouseClicked() {
-//   g.clickSquare(Math.floor(mouseX/distx), Math.floor(mouseY/disty));
-// }
+function mouseClicked() {
+  if(mouseX >= 0
+  && mouseX < width
+  && mouseY >= 0
+  && mouseY < height) {
+    g.clickSquare(Math.floor(mouseX/distx), Math.floor(mouseY/disty));
+  }
+}
