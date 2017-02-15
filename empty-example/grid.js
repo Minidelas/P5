@@ -5,6 +5,10 @@ class Grid {
     this.cuadricula = new Array();
     this.posxAct = Math.floor(random(this.filas));
     this.posyAct = Math.floor(random(this.columnas));
+    // this.finalX = Math.floor(random(this.filas)) - 1;
+    // this.finalY = Math.floor(random(this.columnas)) - 1;
+    this.finalX = this.filas - 1;
+    this.finalY = this.columnas - 1;
     for (var i = 0; i < this.columnas; i++) {
       this.cuadricula[i] = new Array();
       for (var j = 0; j < this.filas; j++) {
@@ -33,9 +37,23 @@ class Grid {
   }
 
   clickSquare(i, j) {
-    if (!this.cuadricula[i][j].isTouched()){
-      this.cuadricula[i][j].touch();
-      this.cuadricula[i][j].drawCustom('black');
-    }
+    console.log(this.cuadricula[i][j]);
+    // if (!this.cuadricula[i][j].isTouched()){
+    //   this.cuadricula[i][j].touch();
+    //   this.cuadricula[i][j].drawCustom('black');
+    // }
+  }
+
+  isExit(i,j) {
+    return i === this.finalX &&
+    j === this.finalY;
+  }
+
+  setVisited(i,j) {
+    this.cuadricula[i][j].setVisited();
+  }
+
+  drawEllipse(i, j){
+    this.cuadricula[i][j].drawEllipse();
   }
 }

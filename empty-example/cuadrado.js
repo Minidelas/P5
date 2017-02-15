@@ -4,7 +4,12 @@ class Cuadrado {
     this.y = y;
     this.distx = distx;
     this.disty = disty;
+    this.openU = false;
+    this.openD = false;
+    this.openR = false;
+    this.openL = false;
     this.touched = false;
+    this.visited = false;
     this.lastIndex = {
       x: null,
       y: null
@@ -19,12 +24,36 @@ class Cuadrado {
     return this.y;
   }
 
+  isOpenUp(){
+    return this.openU;
+  }
+
+  isOpenDown(){
+    return this.openD;
+  }
+
+  isOpenRight(){
+    return this.openR;
+  }
+
+  isOpenLeft(){
+    return this.openL;
+  }
+
   touch() {
     this.touched = true;
   }
 
   isTouched() {
     return this.touched;
+  }
+
+  isVisited() {
+    return this.visited;
+  }
+
+  setVisited(){
+    this.visited = true;
   }
 
   setLastMove(x,y) {
@@ -50,15 +79,19 @@ class Cuadrado {
     switch (direction) {
       case 'u':
         line(this.x+1,            this.y,              this.x+this.distx-1, this.y              );
+        this.openU = true;
       break;
       case 'd':
         line(this.x+this.distx-1, this.y+this.disty,   this.x+1,            this.y+this.disty   );
+        this.openD = true;
       break;
       case 'l':
         line(this.x,              this.y+this.disty-1, this.x,              this.y+1            );
+        this.openL = true;
       break;
       case 'r':
         line(this.x+this.distx,   this.y+1,            this.x+this.distx,   this.y+this.disty-1 );
+        this.openR = true;
       break;
     }
     if (this.touched) {
@@ -103,6 +136,16 @@ class Cuadrado {
       this.y + 1,
       this.distx - 1,
       this.disty - 1
+    );
+  }
+
+  drawEllipse() {
+    noStroke();
+    fill(color('#75A0C7'));
+    ellipse(
+      this.x + Math.floor(this.distx/2),
+      this.y + Math.floor(this.disty/2),
+      this.distx - 5
     );
   }
 }

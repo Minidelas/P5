@@ -1,5 +1,5 @@
-const distx = 25;
-const disty = 25;
+const distx = 50;
+const disty = 50;
 const width = 500;
 const height = 500;
 var rows = Math.round(height/disty);
@@ -12,16 +12,19 @@ function setup() {
   background(255);
   g = new Grid(distx, disty, columns, rows);
   g.dibujar();
+
+  var npc1 = new Npc(g, '#8ADF39', 'verde');
 }
 
 function draw() {
-  if(mouseIsPressed
-    && mouseX >= 0
-    && mouseX < width
-    && mouseY >= 0
-    && mouseY < height) {
-    g.clickSquare(Math.floor(mouseX/distx), Math.floor(mouseY/disty));
-  }
+  // if(mouseIsPressed
+  //   && mouseX >= 0
+  //   && mouseX < width
+  //   && mouseY >= 0
+  //   && mouseY < height) {
+  //   // g.clickSquare(Math.floor(mouseX/distx), Math.floor(mouseY/disty));
+  //   g.drawEllipse(Math.floor(mouseX/distx), Math.floor(mouseY/disty));
+  // }
 }
 
 function mouseClicked() {
@@ -29,6 +32,7 @@ function mouseClicked() {
   && mouseX < width
   && mouseY >= 0
   && mouseY < height) {
-    g.clickSquare(Math.floor(mouseX/distx), Math.floor(mouseY/disty));
+    // g.clickSquare(Math.floor(mouseX/distx), Math.floor(mouseY/disty));
+    // g.drawEllipse(Math.floor(random(rows)), Math.floor(random(columns)));
   }
 }
