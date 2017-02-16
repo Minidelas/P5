@@ -42,6 +42,7 @@ function start() {
 
 function solve() {
   s1 = new Solver(g, '#C7E4C1');
+  // s2 = new Solver(g, '#C7E4C1');
   solving = true;
   iniciar = false;
   loop();
@@ -58,9 +59,11 @@ function draw() {
   }
 
   if (solving) {
-    // for (var i = 0; i < 1000; i++) {
-      s1.solve();
-    // }
+    for (var i = 0; i < 20; i++) {
+      // s1.solveLHand();
+      // s2.solveLHand();
+      s1.solveDiagonal();
+    }
   }
 }
 

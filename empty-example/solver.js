@@ -9,9 +9,10 @@ class Solver {
     this.path = [];
     this.grid.cuadricula[this.grid.finalX][this.grid.finalY].drawCustom('#545994');
     this.grid.cuadricula[this.posxAct][this.posyAct].drawCustom('#FF8E3B');
+    this.moves = 0;
   }
 
-  solve() {
+  solveLHand() {
     if (!this.grid.isExit(this.posxAct, this.posyAct)) {
       this.grid.setVisited(this.posxAct, this.posyAct);
 
@@ -19,29 +20,115 @@ class Solver {
         this.path.push({x: this.posxAct, y: this.posyAct});
         this.grid.cuadricula[this.posxAct][this.posyAct].drawCustom(this.color);
         this.posxAct--;
+        this.moves++;
       } else if (this.canGoUp()) {
         this.path.push({x: this.posxAct, y: this.posyAct});
         this.grid.cuadricula[this.posxAct][this.posyAct].drawCustom(this.color);
         this.posyAct--;
+        this.moves++;
       } else if (this.canGoRight()) {
         this.path.push({x: this.posxAct, y: this.posyAct});
         this.grid.cuadricula[this.posxAct][this.posyAct].drawCustom(this.color);
         this.posxAct++;
+        this.moves++;
       } else if (this.canGoDown()) {
         this.path.push({x: this.posxAct, y: this.posyAct});
         this.grid.cuadricula[this.posxAct][this.posyAct].drawCustom(this.color);
         this.posyAct++;
+        this.moves++;
       } else {
         if (this.path.length === 0) {
           noLoop();
           // break;  // no more path for backtracking, exit (aka no solution for maze)
         } else {
-          this.grid.cuadricula[this.posxAct][this.posyAct].drawCustom('#ffffff');
+          // this.grid.cuadricula[this.posxAct][this.posyAct].drawCustom('#ffffff');
+          this.grid.cuadricula[this.posxAct][this.posyAct].drawCustom('#DDD');
           var last = this.path.pop();
           this.posxAct = last.x;
           this.posyAct = last.y;
         }
       }
+    } else {
+      noLoop();
+      console.log(this.moves);
+    }
+  }
+
+  solveDiagonal() {
+    if (!this.grid.isExit(this.posxAct, this.posyAct)) {
+      this.grid.setVisited(this.posxAct, this.posyAct);
+
+      if ((this.posxAct - this.posyAct) < 0) {
+        if (this.canGoRight()) {
+          this.path.push({x: this.posxAct, y: this.posyAct});
+          this.grid.cuadricula[this.posxAct][this.posyAct].drawCustom(this.color);
+          this.posxAct++;
+          this.moves++;
+        } else if (this.canGoDown()) {
+          this.path.push({x: this.posxAct, y: this.posyAct});
+          this.grid.cuadricula[this.posxAct][this.posyAct].drawCustom(this.color);
+          this.posyAct++;
+          this.moves++;
+        } else if (this.canGoLeft()) {
+          this.path.push({x: this.posxAct, y: this.posyAct});
+          this.grid.cuadricula[this.posxAct][this.posyAct].drawCustom(this.color);
+          this.posxAct--;
+          this.moves++;
+        } else if (this.canGoUp()) {
+          this.path.push({x: this.posxAct, y: this.posyAct});
+          this.grid.cuadricula[this.posxAct][this.posyAct].drawCustom(this.color);
+          this.posyAct--;
+          this.moves++;
+        } else {
+          if (this.path.length === 0) {
+            noLoop();
+            // break;  // no more path for backtracking, exit (aka no solution for maze)
+          } else {
+            // this.grid.cuadricula[this.posxAct][this.posyAct].drawCustom('#ffffff');
+            this.grid.cuadricula[this.posxAct][this.posyAct].drawCustom('#DDD');
+            var last = this.path.pop();
+            this.posxAct = last.x;
+            this.posyAct = last.y;
+          }
+        }
+      } else {
+        if (this.canGoDown()) {
+          this.path.push({x: this.posxAct, y: this.posyAct});
+          this.grid.cuadricula[this.posxAct][this.posyAct].drawCustom(this.color);
+          this.posyAct++;
+          this.moves++;
+        } else if (this.canGoRight()) {
+          this.path.push({x: this.posxAct, y: this.posyAct});
+          this.grid.cuadricula[this.posxAct][this.posyAct].drawCustom(this.color);
+          this.posxAct++;
+          this.moves++;
+        } else if (this.canGoUp()) {
+          this.path.push({x: this.posxAct, y: this.posyAct});
+          this.grid.cuadricula[this.posxAct][this.posyAct].drawCustom(this.color);
+          this.posyAct--;
+          this.moves++;
+        } else if (this.canGoLeft()) {
+          this.path.push({x: this.posxAct, y: this.posyAct});
+          this.grid.cuadricula[this.posxAct][this.posyAct].drawCustom(this.color);
+          this.posxAct--;
+          this.moves++;
+        } else {
+          if (this.path.length === 0) {
+            noLoop();
+            // break;  // no more path for backtracking, exit (aka no solution for maze)
+          } else {
+            // this.grid.cuadricula[this.posxAct][this.posyAct].drawCustom('#ffffff');
+            this.grid.cuadricula[this.posxAct][this.posyAct].drawCustom('#DDD');
+            var last = this.path.pop();
+            this.posxAct = last.x;
+            this.posyAct = last.y;
+          }
+        }
+      }
+
+    } else {
+      noLoop();
+      console.log(this.moves);
     }
   }
 
